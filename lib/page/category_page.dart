@@ -65,7 +65,13 @@ class _CategoryPageState extends State<CategoryPage> {
         if (maxTimeInSec < 1) {
           t.cancel();
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ResultPage()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(
+                questions: widget.category.questions,
+              ),
+            ),
+          );
         } else if (canceltimer == true) {
           t.cancel();
         } else {

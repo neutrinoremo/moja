@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:quiz_app_ii_example/data/result_manager.dart';
+import 'package:quiz_app_ii_example/model/question.dart';
 import 'package:quiz_app_ii_example/page/Check_Answer.dart';
 
-
-
-
 class ResultPage extends StatefulWidget {
-  ResultPage({Key? key}) : super(key: key);
+  final List<Question> questions;
+  ResultPage({
+    Key? key,
+    required this.questions,
+  }) : super(key: key);
   @override
   _ResultPageState createState() => _ResultPageState();
 }
+
 class _ResultPageState extends State<ResultPage> {
   late int _totalQuestion, _currectAnswer = 0;
   @override
@@ -20,11 +24,13 @@ class _ResultPageState extends State<ResultPage> {
     });
     super.initState();
   }
-  @override
-  Widget build(BuildContext context) { final ButtonStyle style =
-  ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
-  return SafeArea(
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle style =
+        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+
+    return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -33,7 +39,6 @@ class _ResultPageState extends State<ResultPage> {
               Navigator.of(context).pop();
             },
           ),
-
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text('Quiz Result'),
@@ -51,26 +56,26 @@ class _ResultPageState extends State<ResultPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Your score: $_currectAnswer / $_totalQuestion"),const SizedBox(height: 30),
+              Text("Your score: $_currectAnswer / $_totalQuestion"),
+              const SizedBox(height: 30),
               ElevatedButton(
-                style: style,
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => SummaryAnswers()),
-                  // );
-                },
-                child: const Text('Check Answer')
-              ),
+                  style: style,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SummaryAnswers(
+                                code: '',
+                                questions: widget.questions,
+                                text: '',
+                              )),
+                    );
+                  },
+                  child: const Text('Check Answer')),
             ],
           ),
         ),
       ),
     );
-
-
   }
-
-
 }
-
