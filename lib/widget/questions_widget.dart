@@ -5,7 +5,6 @@ import 'package:quiz_app_ii_example/model/question.dart';
 import 'package:quiz_app_ii_example/page/result.dart';
 import 'package:quiz_app_ii_example/widget/options_widget.dart';
 
-
 class QuestionsWidget extends StatelessWidget {
   final Category category;
   final PageController? controller;
@@ -26,16 +25,12 @@ class QuestionsWidget extends StatelessWidget {
         controller: controller,
         itemCount: category.questions.length,
         itemBuilder: (context, index) {
-          return buildQuestion(
-              context: context,
-              question: category.questions[index],
-              isLastQuestion: index == category.questions.length - 1);
+          return buildQuestion(context: context, index: index);
         },
       );
 
   Widget buildQuestion({
-    required Question question,
-    required bool isLastQuestion,
+    required int index,
     required BuildContext context,
   }) =>
       Container(
@@ -45,7 +40,7 @@ class QuestionsWidget extends StatelessWidget {
           children: [
             const SizedBox(height: 32),
             Text(
-              question.text,
+              category.questions[index].text,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             SizedBox(height: 8),
@@ -56,17 +51,19 @@ class QuestionsWidget extends StatelessWidget {
             SizedBox(height: 32),
             Expanded(
               child: OptionsWidget(
-                question: question,
+                question: category.questions[index],
                 onClickedOption: onClickedOption,
               ),
             ),
-            if (isLastQuestion)
+            if (index == category.questions.length - 1)
               Center(
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => ResultPage(),
+                        builder: (context) => ResultPage(
+                          questions: category.questions,
+                        ),
                       ),
                     );
                     print("nav to result");

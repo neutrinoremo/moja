@@ -8,11 +8,6 @@ import 'package:quiz_app_ii_example/model/question.dart';
 import 'package:quiz_app_ii_example/widget/question_numbers_widget.dart';
 import 'package:quiz_app_ii_example/widget/questions_widget.dart';
 
-
-int i = 1;
-bool canceltimer = false;
-int timer = 5;
-String showtimer = "30";
 @override
 class CategoryPage extends StatefulWidget {
   final Category category;
@@ -20,14 +15,20 @@ class CategoryPage extends StatefulWidget {
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
+
 class _CategoryPageState extends State<CategoryPage> {
   PageController? controller;
   Question? question;
 
+  int i = 1;
+  bool canceltimer = false;
+  int maxTimeInSec = 5;
+
+  late Timer timer;
+
   @override
   void initState() {
     super.initState();
-    starttimer();
 
     controller = PageController();
     question = widget.category.questions.first;
@@ -35,6 +36,14 @@ class _CategoryPageState extends State<CategoryPage> {
         List.generate(widget.category.questions.length, (index) => false);
     selected =
         List.generate(widget.category.questions.length, (index) => false);
+
+    starttimer();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -50,38 +59,32 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
       );
   void starttimer() async {
-
     const onesec = Duration(seconds: 1);
-    Timer.periodic(onesec, (Timer t) {
+    timer = Timer.periodic(onesec, (Timer t) {
       setState(() {
-        if (timer < 1) {
+        if (maxTimeInSec < 1) {
           t.cancel();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage()));
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(
+                questions: widget.category.questions,
+              ),
+            ),
+          );
         } else if (canceltimer == true) {
           t.cancel();
-
         } else {
-          timer = timer - 1;
-
-
+          maxTimeInSec = maxTimeInSec - 1;
         }
-        showtimer = timer.toString();
-
-
       });
     });
   }
-  bool canceltimer = false;
 
-
-
+  // bool canceltimer = false;
 
   Widget buildAppBar(context) => AppBar(
-        title: Text(showtimer),
-
-
-
+        title: Text(maxTimeInSec.toString()),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -121,12 +124,6 @@ class _CategoryPageState extends State<CategoryPage> {
       print(userResult.toString());
     }
   }
-
-
-
-
-
-
 
   void nextQuestion({int? index, bool jump = false}) {
     final nextPage = controller!.page! + 1;
