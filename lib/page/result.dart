@@ -55,10 +55,10 @@ class _ResultPageState extends State<ResultPage> {
               ElevatedButton(
                 style: style,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SummaryAnswers()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => SummaryAnswers()),
+                  // );
                 },
                 child: const Text('Check Answer')
               ),
